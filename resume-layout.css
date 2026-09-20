@@ -1,0 +1,46 @@
+/*
+ * 简历布局样式：网格作品列表 + 卡片悬停动画 + 响应式。
+ * 结构与课程第 3 课任务文件一致，便于对照学习。
+ */
+
+.portfolio-list {
+  /* grid 让作品列表成为网格容器，子元素按行列排列。 */
+  display: grid;
+
+  /* repeat(2, minmax(0, 1fr))：建立两列，每列各占 1 份剩余宽度。 */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px;
+}
+
+.work-card {
+  overflow: hidden;
+  border: 1px solid #ded8cb;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(52, 60, 56, 0.08);
+  /* 位移与阴影变化时播放 180ms 过渡动画。 */
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.work-card a { display: block; color: inherit; text-decoration: none; }
+.work-cover { display: block; aspect-ratio: 3 / 2; overflow: hidden; background: #edf1ea; }
+.work-cover img { width: 100%; height: 100%; object-fit: cover; }
+.work-copy { padding: 20px 22px 24px; }
+
+.work-card:hover,
+.work-card:focus-within {
+  /* 悬停或键盘聚焦时卡片轻微上浮。 */
+  transform: translateY(-4px);
+  box-shadow: 0 16px 38px rgba(52, 60, 56, 0.14);
+}
+
+@media (max-width: 640px) {
+  .portfolio-list {
+    /* 小屏幕只保留一列，卡片占满可用宽度。 */
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-card { transition: none; }
+}
