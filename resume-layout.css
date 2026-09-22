@@ -1,46 +1,178 @@
-/*
- * 简历布局样式：网格作品列表 + 卡片悬停动画 + 响应式。
- * 结构与课程第 3 课任务文件一致，便于对照学习。
- */
+/* ============================================================
+   布局层：时间线、技能网格、作品卡片、奖项卡片、响应式
+   ============================================================ */
 
-.portfolio-list {
-  /* grid 让作品列表成为网格容器，子元素按行列排列。 */
-  display: grid;
-
-  /* repeat(2, minmax(0, 1fr))：建立两列，每列各占 1 份剩余宽度。 */
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 30px;
+/* ---------- 时间线 ---------- */
+.timeline {
+  position: relative;
+  padding-left: 34px;
 }
+.timeline::before {
+  content: "";
+  position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px;
+  background: linear-gradient(180deg, var(--gold), var(--purple), transparent);
+  border-radius: 2px;
+}
+.timeline-item { position: relative; margin-bottom: 26px; }
+.timeline-item:last-child { margin-bottom: 0; }
+
+.timeline-dot {
+  position: absolute; left: -34px; top: 26px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 0 4px rgba(232, 198, 106, 0.15), 0 0 16px rgba(232, 198, 106, 0.55);
+}
+.timeline-card { padding: 26px 30px; }
+.card-top {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: 10px; margin-bottom: 12px;
+}
+.card-top h3 { font-family: var(--font-serif); font-size: 19px; font-weight: 600; letter-spacing: 0.03em; }
+.card-top time {
+  font-size: 13px; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  padding: 4px 12px; border-radius: 999px;
+  border: 1px solid var(--glass-border); background: var(--glass-bg);
+  white-space: nowrap;
+}
+.timeline-card p { color: var(--muted); font-size: 15.5px; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.tag-row li {
+  font-size: 12.5px; color: var(--text);
+  padding: 5px 13px; border-radius: 8px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+
+/* ---------- 技能网格 ---------- */
+.skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.skill-card { padding: 28px 26px; }
+.skill-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  margin-bottom: 10px;
+}
+.skill-head strong { font-family: var(--font-serif); font-size: 18px; font-weight: 600; letter-spacing: 0.03em; }
+.skill-head span {
+  font-size: 12px; letter-spacing: 0.06em; color: var(--gold);
+  padding: 3px 10px; border-radius: 999px;
+  border: 1px solid rgba(232, 198, 106, 0.35);
+}
+.skill-card p { color: var(--muted); font-size: 14.5px; }
+
+/* ---------- 作品卡片 ---------- */
+.portfolio-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
 
 .work-card {
   overflow: hidden;
-  border: 1px solid #ded8cb;
-  border-radius: 18px;
-  background: #ffffff;
-  box-shadow: 0 12px 32px rgba(52, 60, 56, 0.08);
-  /* 位移与阴影变化时播放 180ms 过渡动画。 */
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  border-radius: 22px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, border-color 0.4s ease;
 }
-
-.work-card a { display: block; color: inherit; text-decoration: none; }
-.work-cover { display: block; aspect-ratio: 3 / 2; overflow: hidden; background: #edf1ea; }
-.work-cover img { width: 100%; height: 100%; object-fit: cover; }
-.work-copy { padding: 20px 22px 24px; }
-
+.work-card a { display: block; color: inherit; }
 .work-card:hover,
 .work-card:focus-within {
-  /* 悬停或键盘聚焦时卡片轻微上浮。 */
+  transform: translateY(-8px);
+  border-color: rgba(232, 198, 106, 0.55);
+  box-shadow: 0 26px 60px rgba(2, 4, 12, 0.5), 0 0 36px rgba(232, 198, 106, 0.18);
+}
+
+.work-cover {
+  position: relative;
+  display: block; aspect-ratio: 16 / 9; overflow: hidden;
+  background: linear-gradient(135deg, rgba(109,91,208,0.3), rgba(232,198,106,0.18));
+}
+.work-cover img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease;
+  filter: saturate(0.9);
+}
+.work-card:hover .work-cover img { transform: scale(1.08); filter: saturate(1.15); }
+.work-cover::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 45%, rgba(7, 10, 20, 0.55));
+  opacity: 0.7;
+}
+.work-badge {
+  position: absolute; top: 14px; left: 14px; z-index: 2;
+  font-family: var(--font-serif);
+  font-size: 11.5px; letter-spacing: 0.1em; color: var(--gold-bright);
+  padding: 5px 12px; border-radius: 999px;
+  background: rgba(8, 10, 28, 0.62);
+  border: 1px solid rgba(232, 198, 106, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.work-copy { padding: 22px 26px 26px; }
+.work-copy h3 { font-family: var(--font-serif); font-size: 20px; font-weight: 600; letter-spacing: 0.03em; margin-bottom: 8px; }
+.work-copy p { color: var(--muted); font-size: 14.5px; margin-bottom: 14px; }
+.work-link {
+  display: inline-block; font-family: var(--font-serif); font-size: 14px; font-weight: 600; letter-spacing: 0.05em;
+  background: var(--grad-text);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  transition: transform 0.3s ease;
+}
+.work-card:hover .work-link { transform: translateX(6px); }
+
+/* ---------- 奖项卡片 ---------- */
+.awards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.award-card {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 24px 26px;
+  border-radius: 18px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+}
+.award-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 38px rgba(52, 60, 56, 0.14);
+  border-color: rgba(232, 198, 106, 0.5);
+  background: var(--glass-hover);
+}
+.award-medal {
+  flex: none;
+  display: grid; place-items: center;
+  width: 46px; height: 46px; font-size: 22px; border-radius: 14px;
+  background: linear-gradient(135deg, rgba(232,198,106,0.2), rgba(109,91,208,0.18));
+  border: 1px solid rgba(232, 198, 106, 0.35);
+}
+/* 四学院色奖牌 */
+.award-card.house-gryffindor .award-medal { border-color: rgba(192, 57, 43, 0.6); box-shadow: 0 0 18px rgba(192, 57, 43, 0.3); }
+.award-card.house-ravenclaw .award-medal { border-color: rgba(58, 93, 168, 0.65); box-shadow: 0 0 18px rgba(58, 93, 168, 0.35); }
+.award-card.house-hufflepuff .award-medal { border-color: rgba(224, 169, 46, 0.6); box-shadow: 0 0 18px rgba(224, 169, 46, 0.3); }
+.award-card.house-slytherin .award-medal { border-color: rgba(30, 122, 76, 0.65); box-shadow: 0 0 18px rgba(30, 122, 76, 0.35); }
+.award-card p { color: var(--muted); font-size: 14.5px; line-height: 1.7; }
+.award-card strong { color: var(--text); font-weight: 600; }
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 46px; text-align: center; }
+  .hero-copy { display: flex; flex-direction: column; align-items: center; }
+  .hero-desc { margin-inline: auto; }
+  .hero-visual { order: -1; }
+  .float-card-1 { left: 2%; }
+  .float-card-2 { right: 2%; }
+  .skills-grid { grid-template-columns: 1fr 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .main-nav { display: none; }
 }
 
 @media (max-width: 640px) {
-  .portfolio-list {
-    /* 小屏幕只保留一列，卡片占满可用宽度。 */
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .work-card { transition: none; }
+  .portfolio-list, .awards-grid, .skills-grid { grid-template-columns: 1fr; }
+  .section { padding-top: 66px; }
+  .timeline { padding-left: 26px; }
+  .timeline-dot { left: -26px; width: 13px; height: 13px; }
+  .timeline-card { padding: 22px 20px; }
+  .cursor-glow { display: none; }
+  .hero { padding-top: 110px; }
+  .float-card { display: none; }
+  .footer-inner { flex-direction: column; text-align: center; }
 }
